@@ -2,6 +2,21 @@
 #include <string>
 #include "big_data_int.h"
 
+typedef unsigned long long size_t;
+extern void *malloc(size_t);
+int *alloc(unsigned count);
+
+void test44_1() { int *p = alloc(10); }  // #nodefect#RESOURCE_LEAK
+
+int *alloc2(unsigned count) {
+  if (count >= 0) {
+    return (int *)malloc(count);
+  }
+  return 0;
+}
+
+void MyFunc() { int *p = alloc2(10); }
+
 int main() 
 {
     cout<<"please input two numbers:"<<endl;
@@ -37,6 +52,10 @@ int main()
     }
 
     cout <<"Result is:"<<endl<<c.data()<<endl;
+
+    big_data_int value(10);
+    big_data_int divisor(0);
+    value % divisor;
 
     return 0;
 }
