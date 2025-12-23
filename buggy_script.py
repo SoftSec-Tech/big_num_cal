@@ -1,9 +1,9 @@
 import time
 
 # 1. 逻辑/语法错误：函数定义缺少冒号，且缩进不规范
-def calculate_discount(price, discount)
+def calculate_discount(price, discount):
     final_price = price * (1 - discount)
-   return final_price  # 缩进错误
+    return final_price
 
 # 2. 陷阱：使用可变对象（列表）作为默认参数
 def add_item_to_cart(item, cart=[]):
