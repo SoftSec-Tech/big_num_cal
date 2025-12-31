@@ -12,7 +12,16 @@ import (
 
 var globalVar int // 未使用的全局变量
 
-// 过长的函数（圈复杂度高）
+// processData validates the input string and processes its comma-separated parts.
+// 
+// For an empty input it returns an error with message "empty data"; for input
+// longer than 100 bytes it returns an error with message "data too long".
+// The input `data` is treated as a comma-separated list of parts. For each
+// even-indexed part (0-based) it truncates the part to 10 characters if longer
+// than 10, and prints "found test" if the part equals "test". For each
+// odd-indexed part it prints "a", "b", "c", or "d" when the part is "a", "b",
+// "c", or "d" respectively, and prints "default" for any other value. On
+// successful processing it returns nil.
 func processData(data string) error {
         if data == "" {
                 return fmt.Errorf("empty data")
@@ -48,13 +57,14 @@ func processData(data string) error {
         return nil
 }
 
-// 未处理的错误
+// readFile reads the contents of the named file and returns them as a string.
+// If the file cannot be read, it returns the empty string.
 func readFile(filename string) string {
         data, _ := ioutil.ReadFile(filename) // 错误未处理
         return string(data)
 }
 
-// 拼写错误的参数名
+// printMessage prints the provided message to standard output.
 func printMessage(mesage string) { // 参数名拼写错误
         fmt.Println(mesage)
 }
@@ -68,11 +78,14 @@ func (e *myError) Error() string {
         return e.msg
 }
 
+// createError returns an error whose message is "error".
 func createError() error {
         return &myError{msg: "error"} // 返回未导出的类型
 }
 
-// 冗余的代码
+// redundantCode demonstrates several redundant or suboptimal code patterns:
+// redundant type declaration for a local string, separate declaration and assignment
+// for an integer, and an always-true conditional block.
 func redundantCode() {
         var s string = "hello" // 冗余的类型声明
         fmt.Println(s)
@@ -86,29 +99,31 @@ func redundantCode() {
         }
 }
 
-// 使用不安全操作
+// unsafeOperation demonstrates obtaining an unsafe.Pointer to a local integer and printing that pointer.
 func unsafeOperation() {
         var x int = 42
         ptr := unsafe.Pointer(&x)
         fmt.Printf("Pointer: %v\n", ptr)
 }
 
-// 未使用的参数
+// unusedParameter ignores the provided string parameter and always returns 42.
 func unusedParameter(unused string) int { // 未使用的参数
         return 42
 }
 
-// 魔法数字
+// calculate returns the number of seconds in 100 days.
+// The value is 100 * 24 * 60 * 60.
 func calculate() int {
         return 100 * 24 * 60 * 60 // 魔法数字
 }
 
-// 冗长的函数调用链
+// longChain prints "HELLO GOLANG" after replacing "world" with "golang", trimming spaces, and converting the result to upper case.
 func longChain() {
         fmt.Println(strings.ToUpper(strings.TrimSpace(strings.Replace("hello world", "world", "golang", -1))))
 }
 
-// 空的错误检查
+// emptyErrorCheck calls processData with the literal "test" and intentionally discards any returned error.
+// It performs no action when processData returns a non-nil error.
 func emptyErrorCheck() {
         err := processData("test")
         if err != nil { // 空的错误检查
@@ -116,7 +131,8 @@ func emptyErrorCheck() {
         }
 }
 
-// defer 在循环中
+// deferInLoop creates ten files named test0.txt through test9.txt and writes "test" to each.
+// Each file's Close is deferred, so all files remain open until deferInLoop returns.
 func deferInLoop() {
         for i := 0; i < 10; i++ {
                 file, _ := os.Create(fmt.Sprintf("test%d.txt", i))
@@ -128,23 +144,28 @@ func deferInLoop() {
 // 可能的竞态条件
 var counter int
 
+// incrementCounter increments the package-level counter variable.
+// It adds one to the global counter and is not safe for concurrent use.
 func incrementCounter() {
         counter++ // 非原子操作
 }
 
-// 使用 time.Sleep 而不是 context
+// waitForCondition pauses execution for five seconds and then prints "done waiting".
+// It performs a fixed-duration wait and does not observe contexts or support cancellation.
 func waitForCondition() {
         time.Sleep(5 * time.Second) // 应该使用context
         fmt.Println("done waiting")
 }
 
-// 过长的行
+// veryLongFunctionNameWithManyParameters performs a placeholder operation using multiple parameters.
+// It always returns the string "result" and a nil error.
 func veryLongFunctionNameWithManyParameters(param1 string, param2 int, param3 bool, param4 float64, param5 []string) (result string, err error) {
         // 这是一个非常长的行，超过了通常的代码风格指南建议的80或120字符限制，应该被分解成多行以提高可读性。
         return "result", nil
 }
 
-// 主函数
+// main is the program entry point that runs a series of example routines demonstrating various behaviors and anti-patterns.
+// It logs startup, invokes multiple helper functions (file I/O, unsafe operations, deferred calls in a loop, etc.), launches a goroutine that increments a counter without synchronization, waits for a condition, and logs completion.
 func main() {
         fmt.Println("Starting application...")
 

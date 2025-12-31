@@ -7,20 +7,47 @@ def calculate_discount(price, discount)
 
 # 2. 陷阱：使用可变对象（列表）作为默认参数
 def add_item_to_cart(item, cart=[]):
+    """
+    Append an item to a shopping cart list.
+    
+    Parameters:
+        item: The item to add to the cart.
+        cart (list): List to which the item will be appended. If omitted, a module-level default list is reused, so successive calls without an explicit cart share the same list.
+    
+    Returns:
+        list: The cart after the item has been appended.
+    """
     cart.append(item)
     return cart
 
 class User:
     # 3. 拼写错误：初始化方法写成了 _init_ 而不是 __init__
     def _init_(self, name, age):
+        """
+        Initialize the user's name and age.
+        
+        Parameters:
+            name (str): The user's name.
+            age (int): The user's age in years.
+        """
         self.name = name
         self.age = age
 
     def greet(self):
         # 4. 类型错误：尝试将字符串和整数直接连接
+        """
+        Prints a greeting that includes the user's name and age.
+        
+        Expects self.name and self.age to be strings; concatenation with non-string types will raise a TypeError.
+        """
         print("Hello, I am " + self.name + " and I am " + self.age + " years old.")
 
 def main():
+    """
+    Run a short shop demo that prints messages and performs several example computations and loops.
+    
+    This function prints a welcome message, computes a numeric expression, evaluates a conditional branch, iterates over a list of items, and computes an average. When executed as written it performs console output and may raise runtime errors such as IndexError (accessing an out-of-range list index) and ZeroDivisionError (division by zero).
+    """
     print("Welcome to the shop!")
     
     # 5. 逻辑错误：运算符误用 (^ 在 Python 中是异或，不是幂运算)
