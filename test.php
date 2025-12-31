@@ -17,12 +17,30 @@ class UserManager
     // 未使用的属性 (Unused Code Rules)
     private $unusedProperty;
 
+    /**
+     * Initialize a new UserManager instance.
+     *
+     * Intentionally empty constructor.
+     */
     public function __construct()
     {
         // 空构造函数 (Unused Code Rules)
     }
 
-    // 过长的函数 (Code Size Rules) - 超过100行
+    /**
+     * Filter and return users who meet age, country, and subscription criteria.
+     *
+     * Processes the provided user records and returns those accepted by the selection
+     * rules (age > 18; country is 'US' with 'premium' or 'basic' subscription, or
+     * country is 'CA'). When $verbose is true, processing messages may be emitted.
+     *
+     * @param array $users Array of user records. Each record is expected to contain the keys
+     *                     `id`, `name`, `email`, `age`, `country`, `subscription`, and `active`.
+     * @param bool $verbose When true, emit processing messages for diagnostic purposes.
+     * @return array The list of user records that satisfy the selection criteria.
+     *
+     * Side effects: increments the global $globalCounter.
+     */
     public function processUserData(array $users, bool $verbose = false): array
     {
         // 未使用的参数 (Unused Code Rules)
@@ -114,7 +132,22 @@ class UserManager
         return $result;
     }
 
-    // 函数参数过多 (Excessive Parameter List)
+    /**
+     * Create a new user record from the provided attributes.
+     *
+     * @param string $firstName The user's first name.
+     * @param string $lastName The user's last name.
+     * @param string $email The user's email address.
+     * @param string $phone The user's phone number.
+     * @param string $address The user's street address.
+     * @param string $city The user's city.
+     * @param string $state The user's state or region.
+     * @param string $zipCode The user's postal or ZIP code.
+     * @param string $country The user's country.
+     * @param bool $isActive Whether the user is active.
+     * @param bool $isAdmin Whether the user has administrative privileges.
+     * @return array The created user represented as an associative array of the provided attributes.
+     */
     public function createUser(
         string $firstName,
         string $lastName,
@@ -131,7 +164,12 @@ class UserManager
         // 函数体为空 (Empty Function Body)
     }
 
-    // 过深的嵌套 (Depth of Inheritance Tree)
+    /**
+     * Classifies an integer into a descriptive category based on its sign, magnitude, and parity.
+     *
+     * @param int $value The integer to classify.
+     * @return string "Special case" if $value is a positive even number not equal to 4; "Even number" if $value is 4; "Odd number" if $value is positive and odd; "Large number" if $value is 10 or greater; "Non-positive" if $value is zero or negative.
+     */
     public function nestedIfExample(int $value): string
     {
         if ($value > 0) {
@@ -157,6 +195,11 @@ class UserManager
 // 未使用的类 (Unused Code Rules)
 class UnusedClass
 {
+    /**
+     * Echoes the literal string "I'm never called!" to the output.
+     *
+     * This method performs a direct output side effect and does not return a value.
+     */
     public function doSomething()
     {
         echo "I'm never called!";
@@ -165,6 +208,9 @@ class UnusedClass
 
 // 匿名类 (Anonymous Class)
 $anonymous = new class {
+    /**
+     * Outputs a greeting message from the anonymous class.
+     */
     public function greet()
     {
         echo "Hello from anonymous class!";

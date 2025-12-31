@@ -17,20 +17,41 @@ public:
     string db_password = "root";
 
     // 3. SQL 注入 (CWE-89)
-    // 直接拼接字符串构建 SQL 查询是 C++ Web 后端常见的严重漏洞
+    /**
+     * @brief Builds an SQL query for a user ID and prints it.
+     *
+     * Constructs an SQL SELECT statement using the provided userId and outputs
+     * the resulting query string to standard output.
+     *
+     * @param userId The user identifier used to populate the WHERE clause.
+     */
     void queryUser(string userId) {
         string query = "SELECT * FROM users WHERE id = '" + userId + "'";
         cout << "Executing query: " << query << endl;
     }
 
     // 4. 命令注入 (CWE-78)
-    // 允许外部输入直接进入 system() 函数
+    /**
+     * @brief Executes the system ping command targeting the given IP address or hostname.
+     *
+     * @param ipAddress IP address or hostname to ping; passed directly to the system shell.
+     */
     void pingHost(string ipAddress) {
         string cmd = "ping -c 4 " + ipAddress;
         system(cmd.c_str());
     }
 };
 
+/**
+ * @brief Copies a null-terminated C string into a fixed-size stack buffer.
+ *
+ * Copies the contents of `input` into a local 10-byte buffer using `strcpy`.
+ * If `input` has length greater than or equal to 10 bytes (including the null
+ * terminator), this will overwrite adjacent stack memory and cause undefined
+ * behavior.
+ *
+ * @param input Null-terminated C string to copy into the local buffer.
+ */
 void legacyBufferOverflow(char* input) {
     char buffer[10];
     
@@ -39,6 +60,12 @@ void legacyBufferOverflow(char* input) {
     strcpy(buffer, input); 
 }
 
+/**
+ * @brief Demonstrates allocation of a dynamic array without guaranteed deallocation.
+ *
+ * Allocates a heap array of 100 integers and may return before releasing it,
+ * causing a memory leak in that early-return path.
+ */
 void memoryLeakAndRawPointers() {
     // 6. 内存泄漏 (CWE-401)
     // 使用了 new 但没有 delete
@@ -54,6 +81,16 @@ void memoryLeakAndRawPointers() {
     delete[] data;
 }
 
+/**
+ * @brief Demonstrates iterator invalidation by modifying a vector while iterating over it.
+ *
+ * Iterates a small vector of integers and calls push_back during traversal when a specific
+ * element is encountered. Mutating the container while iterating may reallocate the
+ * underlying storage and invalidate iterators, resulting in undefined behavior or a crash.
+ *
+ * @note This function intentionally contains unsafe behavior to illustrate iterator
+ *       invalidation (logic error).
+ */
 void iteratorInvalidation() {
     vector<int> numbers = {1, 2, 3, 4, 5};
 
@@ -67,6 +104,14 @@ void iteratorInvalidation() {
     }
 }
 
+/**
+ * @brief Generates and prints a non-cryptographic security token.
+ *
+ * Prints a time-seeded C-library `rand()` value to stdout in the form
+ * "Security Token: <value>".
+ *
+ * This token is not suitable for cryptographic or security-sensitive purposes.
+ */
 void weakRandomness() {
     // 8. 弱伪随机数生成器 (CWE-338)
     // srand/rand 不适合用于安全相关的随机数生成
@@ -75,6 +120,18 @@ void weakRandomness() {
     cout << "Security Token: " << token << endl;
 }
 
+/**
+ * @brief Program entry point that invokes a set of functions demonstrating common insecure coding patterns.
+ *
+ * The function constructs a UserManager instance and, when provided a command-line argument,
+ * passes that argument to several helper functions which exercise vulnerabilities such as
+ * SQL/command injection, buffer overflow, memory-management issues, iterator invalidation,
+ * and weak randomness. It returns early when required input is missing.
+ *
+ * @param argc Number of command-line arguments.
+ * @param argv Array of command-line argument strings.
+ * @return int 0 on normal completion; 1 if a required command-line argument is missing.
+ */
 int main(int argc, char* argv[]) {
     UserManager um;
 

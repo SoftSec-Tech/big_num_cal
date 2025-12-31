@@ -3,14 +3,25 @@
 #include <stdlib.h>
 
 // 1. 硬编码凭证 (Hardcoded Credentials)
-// SAST工具会扫描特定的变量名（如 password, key）和字符串比较
+/**
+ * Check whether the provided password matches the hardcoded admin password and announce access on success.
+ *
+ * Compares the given password against the built-in admin credential and prints "Access Granted!" if they match.
+ *
+ * @param input_pass The password to verify; compared against the hardcoded admin password "SuperSecretAdminPassword123".
+ */
 void check_admin(char *input_pass) {
     if (strcmp(input_pass, "SuperSecretAdminPassword123") == 0) {
         printf("Access Granted!\n");
     }
 }
 
-// 2. 内存泄漏 (Memory Leak) & 空指针解引用 (Null Pointer Dereference)
+/**
+ * Demonstrates unsafe heap allocation that can cause a null-pointer dereference and a memory leak.
+ *
+ * Allocates 50 bytes on the heap, writes to the first byte without checking whether allocation succeeded,
+ * and returns without freeing the allocation. This may dereference a NULL pointer and results in leaked memory.
+ */
 void memory_issues() {
     char *ptr = (char *)malloc(50);
     
@@ -21,7 +32,12 @@ void memory_issues() {
     return; 
 }
 
-// 3. 释放后使用 (Use After Free) & 双重释放 (Double Free)
+/**
+ * Demonstrates heap corruption by performing a use-after-free followed by a double-free.
+ *
+ * Allocates a small heap buffer, frees it, then writes to the freed memory and frees it again,
+ * causing undefined behavior and potential heap corruption.
+ */
 void heap_corruption() {
     char *data = (char *)malloc(10);
     free(data);
@@ -33,6 +49,13 @@ void heap_corruption() {
     free(data); 
 }
 
+/**
+ * Demonstrates unsafe handling of a caller-provided C string that can cause a stack buffer overflow and a format-string vulnerability.
+ *
+ * Copies the contents of `user_input` into a fixed 10-byte stack buffer without bounds checking, then passes `user_input` directly as the `printf` format string. This may overflow the stack buffer, cause memory corruption, allow arbitrary memory reads/writes, or crash the program.
+ *
+ * @param user_input Null-terminated input string provided by the caller; treated as untrusted data.
+ */
 void risky_processing(char *user_input) {
     char buffer[10];
 
@@ -45,6 +68,10 @@ void risky_processing(char *user_input) {
     printf(user_input); 
 }
 
+/**
+ * Program entry point that reads a line from standard input, conditionally processes a command-line argument, and invokes demonstration routines that illustrate unsafe memory and input handling.
+ * @returns 0 on normal termination.
+ */
 int main(int argc, char *argv[]) {
     char local_buf[100];
 
