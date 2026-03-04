@@ -45,4 +45,6 @@ def main():
 
 # 9. 拼写错误：name 变量拼写错误
 if __name__ == "__main__":
+
     mian()
+
